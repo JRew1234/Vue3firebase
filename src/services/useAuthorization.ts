@@ -1,4 +1,4 @@
-import { RegisterUser } from "@/models/User";
+import { LoginUser, RegisterUser } from "@/models/User";
 import router from "@/router";
 import AuthFirebaseService from "./AuthFirebaseService";
 import FirestoreService from "./FirestoreService";
@@ -7,6 +7,8 @@ import { useAuthStore } from "../store/useAuth";
 import { storeToRefs } from "pinia";
 
 export default function useAuthorization() {
+  const main = useAuthStore();
+  const { isLoggedIn, currentUserUid, isVerified } = storeToRefs(main);
   const { uploadImageToStorage } = firebaseStorage();
   const registerUserFirebase = (user: RegisterUser) => {
     AuthFirebaseService.registerUser(user).then((registeredUser) => {
@@ -19,11 +21,31 @@ export default function useAuthorization() {
   };
   const verifyUserFirebase = async (file: any) => {
     const main = useAuthStore();
-    const { currentUserUid, isVerified } = storeToRefs(main);
+    const { currentUserUid } = storeToRefs(main);
     await uploadImageToStorage(file);
     await FirestoreService.setVerification(currentUserUid.value!);
-    isVerified.value = true;
   };
 
-  return { registerUserFirebase, verifyUserFirebase };
+  const loginUserFirebase = (user: LoginUser) => {
+    AuthFirebaseService.loginUser(user)
+      .then((loggedInUser) => {
+        if (loggedInUser) {
+          isLoggedIn.value = true;
+          currentUserUid.value = loggedInUser.user.uid;
+        }
+      })
+      .then(() => {
+        FirestoreService.getVerification(currentUserUid.value!).then(
+          (verification) => {
+            isVerified.value = verification;
+            if (isVerified.value) router.push("/");
+            else {
+              router.push("/verify");
+            }
+          }
+        );
+      });
+  };
+
+  return { registerUserFirebase, verifyUserFirebase, loginUserFirebase };
 }

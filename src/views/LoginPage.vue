@@ -7,12 +7,17 @@
             <v-col justify="center" align="center">
               <v-row>
                 <v-col>
-                  <v-btn to="/register">Register</v-btn>
+                  <v-btn size="large" @click="login">login</v-btn>
                 </v-col>
               </v-row>
               <v-row>
                 <v-col>
-                  <v-btn @click="login">login</v-btn>
+                  <span
+                    >If no account go to
+                    <v-btn variant="text" color="blue" to="/register"
+                      >Register</v-btn
+                    >
+                  </span>
                 </v-col>
               </v-row>
             </v-col>
@@ -25,11 +30,10 @@
 
 <script lang="ts">
 import { defineComponent, ref } from "vue";
-import { LoginUser } from "../models/User";
+import { LoginUser } from "@/models/User";
 import UserForm from "../components/UserForm.vue";
 import CardFormComponent from "../components/CardFormComponent.vue";
-import AuthFirebaseService from "../services/AuthFirebaseService";
-import useLogin from "../services/useLogin";
+import useAuthorization from "@/services/useAuthorization";
 export default defineComponent({
   components: {
     UserForm,
@@ -37,7 +41,7 @@ export default defineComponent({
   },
   setup() {
     const user = ref<LoginUser>(new LoginUser());
-    const { loginUserFirebase } = useLogin();
+    const { loginUserFirebase } = useAuthorization();
     const login = async (): Promise<void> => {
       try {
         await loginUserFirebase(user.value);

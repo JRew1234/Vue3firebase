@@ -5,16 +5,21 @@ import RegisterPage from "../views/RegisterPage.vue";
 import VerifyPage from "../views/VerifyPage.vue";
 import TestLayout from "../views/TestLayout.vue";
 import FormView from "../views/FormView.vue";
-import { useAuthStore } from "../store/useAuth";
-import { storeToRefs, mapActions } from "pinia";
+import { useAuthStore } from "@/store/useAuth";
+import { storeToRefs } from "pinia";
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
     name: "home",
     component: HomeView,
-    meta: {
-      needsAuth: true,
-      needsVerification: true,
+    beforeEnter: (to, from, next) => {
+      const main = useAuthStore();
+      const { isLoggedIn, isVerified } = storeToRefs(main);
+      if (!isLoggedIn.value) {
+        next("/login");
+      } else if (isLoggedIn.value && !isVerified) {
+        next("/verify");
+      } else next();
     },
   },
 
@@ -52,22 +57,4 @@ const router = createRouter({
   history: createWebHistory(),
   routes,
 });
-
-router.beforeEach((to, from, next) => {
-  const main = useAuthStore();
-  const { isLoggedIn, isVerified } = storeToRefs(main);
-  if (to.meta.needsAuth && isLoggedIn.value === false) {
-    next("/login");
-  } else if (
-    to.meta.needsAuth &&
-    to.meta.needsVerification &&
-    isLoggedIn.value === true &&
-    isVerified.value === false
-  ) {
-    next("/verify");
-  } else {
-    next();
-  }
-});
-
 export default router;
