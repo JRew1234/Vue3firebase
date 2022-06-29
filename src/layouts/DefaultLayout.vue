@@ -21,8 +21,8 @@
       <v-spacer></v-spacer>
       <v-row>
         <currency-app-bar
-          v-for="currency in currencies"
-          :key="currency.exchangeRate"
+          v-for="(currency, index) in currencies"
+          :key="index"
           :currencies="currency"
         />
       </v-row>
@@ -68,9 +68,9 @@ export default defineComponent({
       currenciesMock.map((item) => new CurrencyExchange(item))
     );
 
-    const logout = AuthFirebaseService;
+    const firebase = AuthFirebaseService;
 
-    return { currencies, logout: logout.logoutUser };
+    return { currencies, logout: firebase.logoutUser };
   },
 });
 </script>

@@ -53,8 +53,7 @@ export default defineComponent({
       file.value = e.target.files[0];
     };
     const handleFileUpload = async () => {
-      console.log("selected file", file.value);
-      verifyUserFirebase(file.value);
+      await verifyUserFirebase(file.value);
     };
     return { handleFileUpload, file, onFileChange };
   },

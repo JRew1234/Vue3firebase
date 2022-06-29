@@ -2,9 +2,11 @@
 
 <template>
   <v-card elevation="3" class="pa-10 ma-16">
-    <v-row
-      ><v-col> <slot name="form"> </slot> </v-col
-    ></v-row>
+    <v-row>
+      <v-col>
+        <slot name="form"></slot>
+      </v-col>
+    </v-row>
   </v-card>
 </template>
 

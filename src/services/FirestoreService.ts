@@ -1,6 +1,8 @@
 import { RegisterUser } from "@/models/User";
 import { doc, setDoc, getDoc, updateDoc } from "firebase/firestore";
-import { db } from "../firebase";
+import { db } from "@/firebase";
+import { storeToRefs } from "pinia";
+import { useAuthStore } from "@/store/useAuth";
 
 class FireStoreService {
   createUserFirestore = async (uid: string, user: RegisterUser) => {
@@ -27,7 +29,6 @@ class FireStoreService {
     const snapShot = await getDoc(docRef);
     try {
       const data = snapShot.data();
-
       return data!.verified;
     } catch (err) {
       console.log(err);
@@ -36,10 +37,12 @@ class FireStoreService {
 
   setVerification = async (uIdForVerification: string) => {
     const docRef = doc(db, "users", uIdForVerification);
-
+    const main = useAuthStore();
+    const { isVerified } = storeToRefs(main);
     await updateDoc(docRef, {
       verified: true,
     });
+    isVerified.value = true;
   };
 }
 export default new FireStoreService();
