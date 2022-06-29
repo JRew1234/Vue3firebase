@@ -1,0 +1,1 @@
+Vue 3 project of banking app with firebase, vuetify, pinia
