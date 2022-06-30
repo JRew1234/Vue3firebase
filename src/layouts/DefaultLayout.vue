@@ -47,8 +47,8 @@ import { defineComponent, ref, onMounted } from "vue";
 import CurrencyAppBar from "../components/CurrencyAppBar.vue";
 import { CurrencyExchange } from "../models/CurrencyExchange";
 import AuthFirebaseService from "../services/AuthFirebaseService";
-import getCurrencies from "../services/getCurrency";
 import useDate from "../services/useDate";
+import useCurrencyApi from "@/services/useCurrencyApi";
 
 export default defineComponent({
   components: { CurrencyAppBar },
@@ -56,10 +56,15 @@ export default defineComponent({
     const currencies = ref<CurrencyExchange[]>([]);
     const date = ref<null | string>(null);
     const { getLocalizedDate } = useDate();
+    const { getCurrencies } = useCurrencyApi();
 
     onMounted(async () => {
-      await getCurrencies(currencies.value);
-      date.value = await getLocalizedDate();
+      try {
+        currencies.value = await getCurrencies();
+        date.value = getLocalizedDate();
+      } catch (e) {
+        console.error(e);
+      }
     });
     const firebase = AuthFirebaseService;
     return { currencies, logout: firebase.logoutUser, date };
