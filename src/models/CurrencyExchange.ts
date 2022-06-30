@@ -1,7 +1,6 @@
 export class CurrencyExchangeDto {
   public currencyExchangeTitle: string | null = null;
   public currencyExchangeRate: number | null = null;
-  public currencyExchangeRatePercentage: number | null = null;
 }
 
 export class CurrencyExchange extends CurrencyExchangeDto {

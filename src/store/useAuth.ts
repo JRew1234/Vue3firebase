@@ -6,6 +6,7 @@ export const useAuthStore = defineStore("auth", {
     currentUserUid: null as string | null,
     isVerified: false as boolean,
   }),
+  persist: true,
 });
 
 // userDto  user

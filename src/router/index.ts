@@ -37,8 +37,12 @@ const routes: Array<RouteRecordRaw> = [
     path: "/verify",
     name: "verify",
     component: VerifyPage,
-    meta: {
-      needsAuth: true,
+    beforeEnter: (to, from, next) => {
+      const main = useAuthStore();
+      const { isLoggedIn, isVerified } = storeToRefs(main);
+      if (!isLoggedIn.value) {
+        next("/login");
+      } else next();
     },
   },
   {

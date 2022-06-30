@@ -19,6 +19,12 @@
     <v-app-bar app>
       <v-toolbar-title>Vue3 banking app</v-toolbar-title>
       <v-spacer></v-spacer>
+      <span class="font-weight-bold text-overline text-uppercase pa-1"
+        >updated at:</span
+      >
+      <span class="font-weight-light text-caption text-uppercase">
+        {{ date }}</span
+      >
       <v-row>
         <currency-app-bar
           v-for="(currency, index) in currencies"
@@ -37,40 +43,29 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, onMounted } from "vue";
 import CurrencyAppBar from "../components/CurrencyAppBar.vue";
 import { CurrencyByCountries } from "../Enums/curencyByCountries";
 import { CurrencyExchange } from "../models/CurrencyExchange";
 import AuthFirebaseService from "../services/AuthFirebaseService";
+import getCurrencies from "../services/getCurrency";
+import DayJS from "../services/dayJsService";
+import { Dayjs } from "dayjs";
 
 export default defineComponent({
   components: { CurrencyAppBar },
   setup() {
-    const currenciesMock = [
-      {
-        currencyExchangeTitle: CurrencyByCountries.POLISH,
-        currencyExchangeRate: 123,
-        currencyExchangeRatePercentage: 15,
-      },
-      {
-        currencyExchangeTitle: CurrencyByCountries.GREAT_BRITAIN,
-        currencyExchangeRate: 5,
-        currencyExchangeRatePercentage: 15,
-      },
-      {
-        currencyExchangeTitle: CurrencyByCountries.UNITED_STATES,
-        currencyExchangeRate: 12,
-        currencyExchangeRatePercentage: 10,
-      },
-    ];
+    const currencies = ref<CurrencyExchange[]>([]);
+    const date = ref<null | string>(null);
+    const dayJs = new DayJS();
 
-    const currencies = ref<CurrencyExchange[]>(
-      currenciesMock.map((item) => new CurrencyExchange(item))
-    );
-
+    onMounted(async () => {
+      await getCurrencies(currencies.value);
+      date.value = await dayJs.getLocalizedDate();
+    });
     const firebase = AuthFirebaseService;
-
-    return { currencies, logout: firebase.logoutUser };
+    return { currencies, logout: firebase.logoutUser, date };
   },
 });
 </script>
+//ZROBIC DTO Z WALUTAMI

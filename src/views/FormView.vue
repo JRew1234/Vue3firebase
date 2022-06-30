@@ -1,26 +1,20 @@
 <template>
-  <v-form>
-    <v-text-field v-model="inputs.name" label="name"></v-text-field>
-    <v-text-field v-model="inputs.lastname" label="lastname"></v-text-field>
-    <v-text-field v-model="inputs.age" label="age"></v-text-field>
-    <v-text-field v-model="inputs.email" label="email address"></v-text-field>
-    <h2>{{ inputs }}</h2>
-  </v-form>
+  <h1>{{ date }}</h1>
+  <v-btn @click="showDate">show date</v-btn>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive } from "vue";
+import { defineComponent, ref } from "vue";
+import DayJS from "../services/dayJsService";
 
 export default defineComponent({
   setup() {
-    const inputs = reactive({
-      name: "",
-      lastname: "",
-      age: "",
-      email: "",
-    });
-
-    return { inputs };
+    const date = ref();
+    const dateJs = new DayJS();
+    const showDate = () => {
+      date.value = dateJs.getLocalizedDate();
+    };
+    return { date, showDate };
   },
 });
 </script>
