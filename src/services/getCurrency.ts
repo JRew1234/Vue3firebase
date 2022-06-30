@@ -5,8 +5,9 @@ import { CurrencyExchange } from "../models/CurrencyExchange";
 import { api_url } from "./abstractApi";
 
 export default function getCurrencies(array: any): void {
-  const response = axios.get(api_url).then((response) => {
+  axios.get(api_url).then((response) => {
     const responseObject = Object.values(response);
+    console.log(response);
     const dataObject = responseObject[0].exchange_rates;
     for (const currency in dataObject) {
       const currencyObject = <any>{};

@@ -45,23 +45,21 @@
 <script lang="ts">
 import { defineComponent, ref, onMounted } from "vue";
 import CurrencyAppBar from "../components/CurrencyAppBar.vue";
-import { CurrencyByCountries } from "../Enums/curencyByCountries";
 import { CurrencyExchange } from "../models/CurrencyExchange";
 import AuthFirebaseService from "../services/AuthFirebaseService";
 import getCurrencies from "../services/getCurrency";
-import DayJS from "../services/dayJsService";
-import { Dayjs } from "dayjs";
+import useDate from "../services/useDate";
 
 export default defineComponent({
   components: { CurrencyAppBar },
   setup() {
     const currencies = ref<CurrencyExchange[]>([]);
     const date = ref<null | string>(null);
-    const dayJs = new DayJS();
+    const { getLocalizedDate } = useDate();
 
     onMounted(async () => {
       await getCurrencies(currencies.value);
-      date.value = await dayJs.getLocalizedDate();
+      date.value = await getLocalizedDate();
     });
     const firebase = AuthFirebaseService;
     return { currencies, logout: firebase.logoutUser, date };
