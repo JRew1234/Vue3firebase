@@ -61,7 +61,9 @@ export default defineComponent({
     onMounted(async () => {
       try {
         currencies.value = await getCurrencies();
+        console.log(process.env.EXCHANGE_RATE_API_KEY);
         date.value = getLocalizedDate();
+        console.log(currencies);
       } catch (e) {
         console.error(e);
       }
@@ -71,4 +73,4 @@ export default defineComponent({
   },
 });
 </script>
-//ZROBIC DTO Z WALUTAMI
+//ZROBIC DTO Z WALUTAMI //github // linkedin // type typeof //i18n

@@ -19,7 +19,7 @@ export default function useAuthorization() {
       );
     });
   };
-  const verifyUserFirebase = async (file: any) => {
+  const verifyUserFirebase = async (file: File) => {
     const main = useAuthStore();
     const { currentUserUid } = storeToRefs(main);
     await uploadImageToStorage(file);
