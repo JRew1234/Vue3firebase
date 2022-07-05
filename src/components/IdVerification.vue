@@ -43,14 +43,16 @@ export default defineComponent({
   name: "IdVerification",
   components: { CardFormComponent },
   setup() {
-    const file = ref(null);
+    const file = ref<null | File>(null);
     // const rules = [
     //   (value: any) =>
     //     !value || value.size < 10000000 || "ID size should be less than 5 MB!",
     // ];
     const { verifyUserFirebase } = useAuthorization();
-    const onFileChange = (e: any) => {
-      file.value = e.target.files[0];
+    const onFileChange = (e: { target: HTMLInputElement }) => {
+      if (e.target.files) {
+        file.value = e.target.files[0];
+      }
     };
     const handleFileUpload = async () => {
       if (file.value) {
